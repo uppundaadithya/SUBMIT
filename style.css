@@ -1,0 +1,133 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, rgb(35, 15, 15), rgb(137, 11, 11));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    color: #fff;
+    min-width: 100px;
+    
+}
+
+section {
+    width: 100%;
+    max-width: 900px;
+    padding: 15px;
+    box-sizing: border-box;
+    margin-top: auto;
+}
+
+form {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.578) 0px 30px 90px;
+    color: #333;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-size: 2.5em;
+    color: red;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"],
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    box-sizing: border-box;
+    resize: vertical;
+    outline: #333;
+}
+
+textarea {
+    min-height: 100px;
+}
+
+.radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    margin-top: 10px;
+}
+
+.radio-group p {
+    margin: 0;
+}
+
+.red-text {
+    color: crimson;
+}
+
+button[type="submit"] {
+    margin-top: 25px;
+    padding: 12px;
+    width: 100%;
+    background-color: crimson;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: darkred;
+}
+/* Style for the submit button when disabled */
+
+#submitBtn:disabled {
+    background-color: #ccc !important;
+    color: #666 !important;
+    cursor: not-allowed;
+}
+
+/* Style for the submit button when enabled */
+#submitBtn:enabled {
+    background-color: #f60000 !important;
+    color: #ffffff !important;
+    cursor: pointer; /* Show pointer cursor for enabled state */
+}
+
+
+@media (max-width: 700px) {
+    h2 {
+        font-size: 2em;
+    }
+
+    label,
+    input,
+    textarea,
+    button {
+        font-size: 1rem;
+    }
+
+    .radio-group {
+        flex-direction: column;
+    }
+
+    .radio-group p {
+        flex: 1 1 100%;
+    }
+}
