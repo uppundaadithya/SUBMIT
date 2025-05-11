@@ -45,8 +45,8 @@
 
     <label for="message">Additional Information</label>
     <textarea id="message" name="message" rows="4"></textarea>
-
-    <button type="submit" id="submitBtn" disabled>Send</button>
+      <p>(cash on delivary only)</p>
+    <button type="submit" id="submitBtn" disabled>Send and pay </button>
   </form>
 </section>
 
@@ -56,45 +56,25 @@
 
 <script>
   const { jsPDF } = window.jspdf;
+
   const form = document.getElementById("bloodForm");
   const submitBtn = document.getElementById("submitBtn");
   const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
   const radioButtons = form.querySelectorAll('input[name="blood"]');
+  const unitInput = document.getElementById("units");
 
-  // PDF Generation on submit
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  // Function to calculate and update price
+  function updatePrice() {
+    const units = parseInt(unitInput.value, 10);
+    const pricePerUnit = 1550;
 
-    const doc = new jsPDF();
-    const now = new Date();
-
-    const name = document.getElementById("name").value;
-    const units = document.getElementById("units").value;
-    const phone = document.getElementById("phone").value;
-    const hospital = document.getElementById("hospital").value;
-    const location = document.getElementById("location").value;
-    const contact = document.getElementById("contact").value;
-    const message = document.getElementById("message").value;
-
-    const bloodGroup = document.querySelector('input[name="blood"]:checked')?.value || "Not selected";
-
-    doc.setFontSize(16);
-    doc.text("Blood Request Form", 20, 20);
-    doc.setFontSize(12);
-    doc.text(`Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 20, 30);
-    doc.text(`Patient Name: ${name}`, 20, 40);
-    doc.text(`Blood Group: ${bloodGroup}`, 20, 50);
-    doc.text(`Required Units: ${units}`, 20, 60);
-    doc.text(`Phone Number: ${phone}`, 20, 70);
-    doc.text(`Hospital Name: ${hospital}`, 20, 80);
-    doc.text(`Hospital Location: ${location}`, 20, 90);
-    doc.text(`Contact Number: ${contact}`, 20, 100);
-    doc.text(`Additional Info: ${message}`, 20, 110);
-
-    doc.save("Blood-Request.pdf");
-
-    setTimeout(() => form.submit(), 500); // delay for PDF download before actual form submit
-  });
+    if (!isNaN(units) && units > 0) {
+      const totalPrice = units * pricePerUnit;
+      submitBtn.textContent = `Send & Pay ₹${totalPrice}`;
+    } else {
+      submitBtn.textContent = `Send & Pay ₹0`;
+    }
+  }
 
   // Enable/Disable Submit Button Based on Form Completion
   function checkFormValidity() {
@@ -118,11 +98,55 @@
   }
 
   // Add input/change listeners
-  inputs.forEach(input => input.addEventListener('input', checkFormValidity));
+  inputs.forEach(input => {
+    input.addEventListener('input', () => {
+      checkFormValidity();
+      if (input.id === "units") updatePrice();
+    });
+  });
   radioButtons.forEach(rb => rb.addEventListener('change', checkFormValidity));
 
-  // Initial validation check
+  // Initial validation check and price display
   checkFormValidity();
+  updatePrice();
+
+  // Handle click and generate PDF before submitting
+  submitBtn.addEventListener("click", function () {
+    if (submitBtn.disabled) return; // prevent action if form invalid
+
+    const doc = new jsPDF();
+    const now = new Date();
+
+    const name = document.getElementById("name").value;
+    const units = unitInput.value;
+    const phone = document.getElementById("phone").value;
+    const hospital = document.getElementById("hospital").value;
+    const location = document.getElementById("location").value;
+    const contact = document.getElementById("contact").value;
+    const message = document.getElementById("message").value;
+    const bloodGroup = document.querySelector('input[name="blood"]:checked')?.value || "Not selected";
+
+    const totalPrice = units * 1550;
+
+    doc.setFontSize(16);
+    doc.text("Blood Request Form", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Date: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 20, 30);
+    doc.text(`Patient Name: ${name}`, 20, 40);
+    doc.text(`Blood Group: ${bloodGroup}`, 20, 50);
+    doc.text(`Required Units: ${units}`, 20, 60);
+    doc.text(`Phone Number: ${phone}`, 20, 70);
+    doc.text(`Hospital Name: ${hospital}`, 20, 80);
+    doc.text(`Hospital Location: ${location}`, 20, 90);
+    doc.text(`Contact Number: ${contact}`, 20, 100);
+    doc.text(`Additional Info: ${message}`, 20, 110);
+    doc.text(`Total Price: ₹${totalPrice}`, 20, 120);
+
+    doc.save("Blood-Request.pdf");
+
+    setTimeout(() => form.submit(), 500); // allow download, then submit
+  });
 </script>
+
 </body>
 </html>
